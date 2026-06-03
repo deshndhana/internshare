@@ -7,11 +7,11 @@ const ReviewCard = ({ review, isActive, onClick, onLike, currentUserId }) => {
       <div className="card-top">
         <div style={{ display: 'flex', gap: '1rem', alignItems: 'center' }}>
           <div className="card-company-logo">
-            {(review.companyName || 'I').charAt(0).toUpperCase()}
+            {String(review.companyName || 'I').charAt(0).toUpperCase()}
           </div>
           <div className="card-title-group">
-            <h3>{review.companyName || 'Unknown Company'}</h3>
-            <p>{review.department || 'Any Department'} • {review.location || 'Remote'}</p>
+            <h3>{String(review.companyName || 'Unknown Company')}</h3>
+            <p>{String(review.department || 'Any Department')} • {String(review.location || 'Remote')}</p>
           </div>
         </div>
         {review.isAnonymous && <span style={{ fontSize: '1.2rem' }} title="Anonymous">🕵️</span>}

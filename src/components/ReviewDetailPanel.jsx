@@ -15,10 +15,10 @@ const ReviewDetailPanel = ({ review, currentUserId, isAdmin, onDelete, onEdit })
   return (
     <div className="detail-pane fade-in">
       <div className="detail-header">
-        <h2>{review.companyName} - {review.department}</h2>
+        <h2>{String(review.companyName || 'Unknown')} - {String(review.department || 'Unknown')}</h2>
         <div className="detail-meta">
-          📍 {review.location} &nbsp;|&nbsp; 📅 {review.date} &nbsp;|&nbsp; 
-          👤 {review.isAnonymous ? 'Anonymous' : review.reviewerName}
+          📍 {String(review.location || 'Remote')} &nbsp;|&nbsp; 📅 {String(review.date || '')} &nbsp;|&nbsp; 
+          👤 {review.isAnonymous ? 'Anonymous' : String(review.reviewerName || '')}
         </div>
 
         <div className="detail-actions">

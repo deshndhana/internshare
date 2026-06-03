@@ -222,8 +222,8 @@ function App() {
   const filteredReviews = reviews.filter(review => {
     if (currentView === 'myposts' && review.creatorId !== loggedInEmail) return false;
     
-    const compName = review.companyName || 'Unknown Company';
-    const deptName = review.department || 'Any Department';
+    const compName = String(review.companyName || 'Unknown Company');
+    const deptName = String(review.department || 'Any Department');
 
     const matchesDept = selectedDepartment === 'all' || deptName === selectedDepartment;
     const matchesComp = selectedCompanyFilter === 'all' || compName === selectedCompanyFilter;
