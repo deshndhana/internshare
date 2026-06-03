@@ -217,14 +217,18 @@ function App() {
     }
   };
 
-  const uniqueCompanies = Array.from(new Set(reviews.map(r => r.companyName))).sort();
+  const uniqueCompanies = Array.from(new Set(reviews.map(r => r.companyName || 'Unknown Company'))).sort();
 
   const filteredReviews = reviews.filter(review => {
     if (currentView === 'myposts' && review.creatorId !== loggedInEmail) return false;
-    const matchesDept = selectedDepartment === 'all' || review.department === selectedDepartment;
-    const matchesComp = selectedCompanyFilter === 'all' || review.companyName === selectedCompanyFilter;
-    const matchesSearch = review.companyName.toLowerCase().includes(searchQuery.toLowerCase()) || 
-                          review.department.toLowerCase().includes(searchQuery.toLowerCase());
+    
+    const compName = review.companyName || 'Unknown Company';
+    const deptName = review.department || 'Any Department';
+
+    const matchesDept = selectedDepartment === 'all' || deptName === selectedDepartment;
+    const matchesComp = selectedCompanyFilter === 'all' || compName === selectedCompanyFilter;
+    const matchesSearch = compName.toLowerCase().includes(searchQuery.toLowerCase()) || 
+                          deptName.toLowerCase().includes(searchQuery.toLowerCase());
     return matchesDept && matchesComp && matchesSearch;
   });
 
