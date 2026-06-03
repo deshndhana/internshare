@@ -7,15 +7,16 @@ const ReviewDetailPanel = ({ review, currentUserId, isAdmin, onDelete, onEdit, o
   const canModify = isOwner || isAdmin;
 
   return (
-    <div className="modal-overlay fade-in" onClick={onClose} style={{ zIndex: 1000 }}>
+    <div className="modal-overlay fade-in" onClick={onClose} style={{ zIndex: 1000, padding: '1rem' }}>
       <div className="modal-content" onClick={e => e.stopPropagation()} style={{ maxWidth: '800px', margin: 'auto' }}>
         <button className="modal-close" onClick={onClose}>×</button>
         <div className="detail-pane">
       <div className="detail-header">
         <h2>{String(review.companyName || 'Unknown')} - {String(review.department || 'Unknown')}</h2>
-        <div className="detail-meta">
-          📍 {String(review.location || 'Remote')} &nbsp;|&nbsp; 📅 {String(review.date || '')} &nbsp;|&nbsp; 
-          👤 {review.isAnonymous ? 'Anonymous' : String(review.reviewerName || '')}
+        <div className="detail-meta" style={{ display: 'flex', flexWrap: 'wrap', gap: '0.5rem 1rem', marginTop: '0.75rem' }}>
+          <span>📍 {String(review.location || 'Remote')}</span>
+          <span>📅 {String(review.date || '')}</span>
+          <span>👤 {review.isAnonymous ? 'Anonymous' : String(review.reviewerName || '')}</span>
         </div>
 
         <div className="detail-actions">
