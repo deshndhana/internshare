@@ -8,7 +8,9 @@ import LoginModal from './components/LoginModal';
 import Dashboard from './components/Dashboard';
 import { departments } from './data';
 import { db } from './firebase';
-import { collection, getDocs, addDoc, updateDoc, deleteDoc, doc, serverTimestamp, query, orderBy } from 'firebase/firestore';
+import { auth } from './firebase';
+import { collection, getDocs, addDoc, updateDoc, deleteDoc, doc, serverTimestamp, query, orderBy, arrayRemove, arrayUnion } from 'firebase/firestore';
+import { signOut } from 'firebase/auth';
 import './App.css';
 
 // Basic XSS Sanitizer Function for Security
@@ -34,6 +36,7 @@ function App() {
   const [searchQuery, setSearchQuery] = useState('');
   
   const [loggedInEmail, setLoggedInEmail] = useState(() => localStorage.getItem('internshare_user_email') || '');
+  const [showProfileMenu, setShowProfileMenu] = useState(false);
   const [isLoginModalOpen, setIsLoginModalOpen] = useState(false);
   const [loading, setLoading] = useState(true);
   
@@ -71,6 +74,15 @@ function App() {
     if (currentView !== 'add') {
       setCurrentView('add');
     }
+  };
+
+  const handleLogout = () => {
+    signOut(auth).then(() => {
+      setLoggedInEmail('');
+      localStorage.removeItem('internshare_user_email');
+      setShowProfileMenu(false);
+      setCurrentView('home');
+    }).catch(err => console.error(err));
   };
 
   const handleShareExperienceClick = (e) => {
@@ -146,9 +158,37 @@ function App() {
     setCurrentView('edit');
   };
 
+  const handleLike = async (review) => {
+    if (!loggedInEmail) {
+      setIsLoginModalOpen(true);
+      return;
+    }
+    try {
+      const reviewDoc = doc(db, "reviews", review.id);
+      const hasLiked = review.likes && review.likes.includes(loggedInEmail);
+      if (hasLiked) {
+        await updateDoc(reviewDoc, { likes: arrayRemove(loggedInEmail) });
+        setReviews(reviews.map(r => r.id === review.id ? { ...r, likes: r.likes.filter(email => email !== loggedInEmail) } : r));
+        if (selectedReview?.id === review.id) {
+          setSelectedReview(prev => ({ ...prev, likes: prev.likes.filter(email => email !== loggedInEmail) }));
+        }
+      } else {
+        await updateDoc(reviewDoc, { likes: arrayUnion(loggedInEmail) });
+        const updatedLikes = [...(review.likes || []), loggedInEmail];
+        setReviews(reviews.map(r => r.id === review.id ? { ...r, likes: updatedLikes } : r));
+        if (selectedReview?.id === review.id) {
+          setSelectedReview(prev => ({ ...prev, likes: updatedLikes }));
+        }
+      }
+    } catch (error) {
+      console.error("Error liking review:", error);
+    }
+  };
+
   const uniqueCompanies = Array.from(new Set(reviews.map(r => r.companyName))).sort();
 
   const filteredReviews = reviews.filter(review => {
+    if (currentView === 'myposts' && review.creatorId !== loggedInEmail) return false;
     const matchesDept = selectedDepartment === 'all' || review.department === selectedDepartment;
     const matchesComp = selectedCompanyFilter === 'all' || review.companyName === selectedCompanyFilter;
     const matchesSearch = review.companyName.toLowerCase().includes(searchQuery.toLowerCase()) || 
@@ -170,7 +210,7 @@ function App() {
       />
 
       <div className="workspace">
-        {(currentView === 'home' || currentView === 'dashboard') && (
+        {(currentView === 'home' || currentView === 'dashboard' || currentView === 'myposts') && (
           <div className="hero-header fade-in">
             <div className="top-nav">
               <div className="top-nav-brand">
@@ -187,8 +227,20 @@ function App() {
               <div className="top-nav-actions">
                 <button className="sidebar-icon" style={{color: 'white', border: '1px solid rgba(255,255,255,0.2)'}}>🔔</button>
                 {loggedInEmail ? (
-                  <div style={{width: 36, height: 36, backgroundColor: '#cbd5e1', borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center', fontWeight: 'bold', color: '#1e293b'}} title={loggedInEmail}>
-                    {loggedInEmail.charAt(0).toUpperCase()}
+                  <div style={{ position: 'relative' }}>
+                    <div 
+                      onClick={() => setShowProfileMenu(!showProfileMenu)}
+                      style={{width: 36, height: 36, backgroundColor: '#cbd5e1', borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center', fontWeight: 'bold', color: '#1e293b', cursor: 'pointer'}} 
+                      title={loggedInEmail}
+                    >
+                      {loggedInEmail.charAt(0).toUpperCase()}
+                    </div>
+                    {showProfileMenu && (
+                      <div style={{ position: 'absolute', top: '45px', right: 0, background: 'white', borderRadius: '8px', boxShadow: 'var(--shadow-lg)', padding: '0.5rem', zIndex: 100, minWidth: '150px' }}>
+                        <button onClick={() => { setCurrentView('myposts'); setShowProfileMenu(false); }} style={{ width: '100%', padding: '0.75rem', textAlign: 'left', fontWeight: 500, color: 'var(--text-primary)' }}>My Experiences</button>
+                        <button onClick={handleLogout} style={{ width: '100%', padding: '0.75rem', textAlign: 'left', fontWeight: 500, color: '#ef4444' }}>Log Out</button>
+                      </div>
+                    )}
                   </div>
                 ) : (
                   <button className="btn-secondary" style={{color: 'white', borderColor: 'white', padding: '0.5rem 1rem'}} onClick={() => setIsLoginModalOpen(true)}>
@@ -199,13 +251,13 @@ function App() {
             </div>
 
             <div className="hero-content">
-              <h2>Let’s find your dream internship</h2>
-              <p>Discover the best experiences from students at top companies across all departments.</p>
+              <h2>{currentView === 'myposts' ? 'Your Shared Experiences' : 'Let’s find your dream internship'}</h2>
+              <p>{currentView === 'myposts' ? 'Manage your internship reviews and updates here.' : 'Discover the best experiences from students at top companies across all departments.'}</p>
             </div>
           </div>
         )}
 
-        {currentView === 'home' && (
+        {(currentView === 'home' || currentView === 'myposts') && (
           <>
             <div className="search-container fade-in">
               <div className="search-box">
@@ -254,7 +306,7 @@ function App() {
                 
                 {loading ? (
                   <div style={{textAlign: 'center', padding: '2rem', color: 'var(--text-tertiary)'}}>
-                    Loading experiences from Firebase...
+                    {currentView === 'myposts' ? "You haven't shared any experiences yet." : "Loading experiences from Firebase..."}
                   </div>
                 ) : filteredReviews.length > 0 ? (
                   filteredReviews.map(review => (
@@ -263,6 +315,8 @@ function App() {
                       review={review} 
                       isActive={selectedReview?.id === review.id}
                       onClick={setSelectedReview}
+                      onLike={handleLike}
+                      currentUserId={loggedInEmail}
                     />
                   ))
                 ) : (

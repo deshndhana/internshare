@@ -1,40 +1,39 @@
+const ReviewCard = ({ review, isActive, onClick, onLike, currentUserId }) => {
+  const hasLiked = review.likes && currentUserId && review.likes.includes(currentUserId);
+  const likesCount = review.likes ? review.likes.length : 0;
 
-
-const ReviewCard = ({ review, isActive, onClick }) => {
   return (
-    <div className={`review-card ${isActive ? 'active' : ''}`} onClick={() => onClick(review)}>
+    <div className={`review-card fade-in ${isActive ? 'active' : ''}`} onClick={() => onClick(review)}>
       <div className="card-top">
-        <div style={{ display: 'flex', gap: '1rem' }}>
+        <div style={{ display: 'flex', gap: '1rem', alignItems: 'center' }}>
           <div className="card-company-logo">
             {review.companyName.charAt(0).toUpperCase()}
           </div>
           <div className="card-title-group">
-            <h3>{review.department}</h3>
-            <p>{review.companyName}</p>
-            <p style={{ marginTop: '0.25rem', color: '#1f2937', fontWeight: 500 }}>
-              👤 {review.isAnonymous ? 'Anonymous' : review.reviewerName}
-            </p>
+            <h3>{review.companyName}</h3>
+            <p>{review.department} • {review.location}</p>
           </div>
         </div>
-        <button className="btn-secondary" style={{ padding: '0.4rem 0.8rem', fontSize: '0.85rem' }}>
-          View Details
-        </button>
+        {review.isAnonymous && <span style={{ fontSize: '1.2rem' }} title="Anonymous">🕵️</span>}
       </div>
       
-      <div className="card-meta">
-        <span>📍 {review.location}</span>
-        <span>📅 {review.date}</span>
-      </div>
+      <p style={{ fontSize: '0.9rem', color: 'var(--text-secondary)', margin: '0.5rem 0 1rem 0', display: '-webkit-box', WebkitLineClamp: 2, WebkitBoxOrient: 'vertical', overflow: 'hidden' }}>
+        {review.experience}
+      </p>
 
-      <div className="tags-row">
-        <span className="tag" style={{ background: 'rgba(13, 110, 253, 0.1)', color: '#0d6efd' }}>
-          Full Time
-        </span>
-        {review.image && (
-          <span className="tag" style={{ background: '#f3f4f6', color: '#4b5563' }}>
-            Has Image
-          </span>
-        )}
+      <div className="card-meta">
+        <span>By {review.isAnonymous ? 'Anonymous Student' : review.reviewerName}</span>
+        
+        <div style={{ display: 'flex', gap: '1rem', alignItems: 'center' }}>
+          <div 
+            onClick={(e) => { e.stopPropagation(); if(onLike) onLike(review); }}
+            style={{ display: 'flex', alignItems: 'center', gap: '0.25rem', cursor: 'pointer', color: hasLiked ? '#ef4444' : 'var(--text-tertiary)', transition: 'color 0.2s' }}
+          >
+            <span style={{ fontSize: '1.1rem' }}>{hasLiked ? '❤️' : '🤍'}</span>
+            <span style={{ fontWeight: 500 }}>{likesCount}</span>
+          </div>
+          <span>{review.date}</span>
+        </div>
       </div>
     </div>
   );

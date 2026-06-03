@@ -1,7 +1,6 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import { useState, useEffect } from 'react';
 import { departments } from '../data';
-import { storage } from '../firebase';
-import { ref, uploadBytes, getDownloadURL } from 'firebase/storage';
 
 const AddReviewForm = ({ onAddReview, initialData = null, onCancelEdit }) => {
   const [formData, setFormData] = useState(initialData || {
@@ -11,12 +10,10 @@ const AddReviewForm = ({ onAddReview, initialData = null, onCancelEdit }) => {
   });
   
   const [isUploading, setIsUploading] = useState(false);
-  const [uploadError, setUploadError] = useState('');
   const [previewUrl, setPreviewUrl] = useState(initialData?.image || null);
 
   useEffect(() => {
     if (initialData) {
-      // eslint-disable-next-line react-hooks/exhaustive-deps
       setFormData(initialData);
       setPreviewUrl(initialData.image);
     }
@@ -27,34 +24,40 @@ const AddReviewForm = ({ onAddReview, initialData = null, onCancelEdit }) => {
     setFormData({ ...formData, [name]: type === 'checkbox' ? checked : value });
   };
 
-  const handleImageChange = async (e) => {
+  const handleImageChange = (e) => {
     const file = e.target.files[0];
     if (!file) return;
     
-    // Quick local preview
-    const localUrl = URL.createObjectURL(file);
-    setPreviewUrl(localUrl);
-    
-    // Upload to Firebase Storage
     setIsUploading(true);
-    setUploadError('');
-    try {
-      const storageRef = ref(storage, `intern_images/${Date.now()}_${file.name}`);
-      const snapshot = await uploadBytes(storageRef, file);
-      const downloadURL = await getDownloadURL(snapshot.ref);
-      setFormData(prev => ({ ...prev, image: downloadURL }));
-    } catch (error) {
-      console.error("Upload error:", error);
-      setUploadError('Failed to upload image. Please try again.');
-      setPreviewUrl(null); // revert on fail
-    } finally {
-      setIsUploading(false);
-    }
+    const reader = new FileReader();
+    reader.readAsDataURL(file);
+    reader.onload = (event) => {
+      const img = new Image();
+      img.src = event.target.result;
+      img.onload = () => {
+        // Compress image using Canvas to save Database limit
+        const canvas = document.createElement('canvas');
+        const MAX_WIDTH = 800;
+        const scaleSize = MAX_WIDTH / img.width;
+        canvas.width = MAX_WIDTH;
+        canvas.height = img.height * scaleSize;
+        
+        const ctx = canvas.getContext('2d');
+        ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+        
+        // Convert to highly compressed Base64 JPEG
+        const compressedBase64 = canvas.toDataURL('image/jpeg', 0.6);
+        
+        setPreviewUrl(compressedBase64);
+        setFormData(prev => ({ ...prev, image: compressedBase64 }));
+        setIsUploading(false);
+      };
+    };
   };
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    if (isUploading) return; // Prevent submit while uploading
+    if (isUploading) return; 
     
     const submittedData = {
       ...formData,
@@ -62,6 +65,7 @@ const AddReviewForm = ({ onAddReview, initialData = null, onCancelEdit }) => {
       date: initialData ? initialData.date : new Date().toISOString().split('T')[0],
       reviewerName: formData.isAnonymous ? '' : formData.reviewerName,
       contactNumber: formData.isAnonymous ? '' : formData.contactNumber,
+      likes: initialData && initialData.likes ? initialData.likes : [] // Initialize likes array
     };
     onAddReview(submittedData);
   };
@@ -140,17 +144,16 @@ const AddReviewForm = ({ onAddReview, initialData = null, onCancelEdit }) => {
             {previewUrl ? (
               <div style={{ position: 'relative' }}>
                 <img src={previewUrl} alt="Preview" style={{ maxHeight: '200px', borderRadius: '8px', boxShadow: 'var(--shadow-sm)' }} />
-                {isUploading && <div style={{ position: 'absolute', top: 0, left: 0, right: 0, bottom: 0, background: 'rgba(255,255,255,0.7)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontWeight: 'bold', color: 'var(--primary-color)' }}>Uploading...</div>}
+                {isUploading && <div style={{ position: 'absolute', top: 0, left: 0, right: 0, bottom: 0, background: 'rgba(255,255,255,0.7)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontWeight: 'bold', color: 'var(--primary-color)' }}>Processing...</div>}
               </div>
             ) : (
               <div>
                 <div style={{ fontSize: '2.5rem', marginBottom: '0.5rem' }}>📸</div>
                 <p style={{ color: 'var(--text-secondary)', margin: 0, fontWeight: 500 }}>Click or drag a photo to upload</p>
-                <p style={{ color: 'var(--text-tertiary)', fontSize: '0.85rem', marginTop: '0.25rem' }}>Max size 5MB</p>
+                <p style={{ color: 'var(--text-tertiary)', fontSize: '0.85rem', marginTop: '0.25rem' }}>Image will be optimized automatically</p>
               </div>
             )}
           </div>
-          {uploadError && <p style={{ color: '#ef4444', fontSize: '0.85rem', marginTop: '0.5rem' }}>{uploadError}</p>}
         </div>
 
         <div className="form-actions">
@@ -158,7 +161,7 @@ const AddReviewForm = ({ onAddReview, initialData = null, onCancelEdit }) => {
             <button type="button" className="btn-secondary" onClick={onCancelEdit}>Cancel</button>
           )}
           <button type="submit" className="btn-primary" disabled={isUploading}>
-            {isUploading ? 'Uploading...' : (initialData ? 'Save Changes' : 'Submit Review')}
+            {isUploading ? 'Processing...' : (initialData ? 'Save Changes' : 'Submit Review')}
           </button>
         </div>
 
