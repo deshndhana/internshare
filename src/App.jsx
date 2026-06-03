@@ -404,14 +404,14 @@ function App() {
         onClose={() => setIsLoginModalOpen(false)}
         onLogin={handleLogin}
       />
-      {showTutorial && (
+      {/* {showTutorial && (
         <TutorialOverlay 
           onComplete={() => {
             setShowTutorial(false);
             localStorage.setItem('internshare_tutorial_seen', 'true');
           }} 
         />
-      )}
+      )} */}
     </div>
   );
 }
