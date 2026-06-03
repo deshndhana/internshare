@@ -33,12 +33,22 @@ const TutorialOverlay = ({ onComplete }) => {
   const [rect, setRect] = useState(null);
 
   const updateRect = () => {
+    // Check if step exists before accessing
+    if (currentStep >= steps.length) return;
+    
     const el = document.getElementById(steps[currentStep].id);
     if (el) {
       const r = el.getBoundingClientRect();
-      setRect(r);
+      // Only set rect if element is actually visible
+      if (r.width > 0 && r.height > 0) {
+        setRect(r);
+      } else {
+        // Fallback for hidden elements on mobile
+        setRect({ top: window.innerHeight / 2, left: window.innerWidth / 2, width: 0, height: 0, bottom: window.innerHeight / 2, right: window.innerWidth / 2 });
+      }
     } else {
-      setRect(null);
+      // Element not found, use a fallback center dot so it doesn't crash
+      setRect({ top: window.innerHeight / 2, left: window.innerWidth / 2, width: 0, height: 0, bottom: window.innerHeight / 2, right: window.innerWidth / 2 });
     }
   };
 
@@ -47,9 +57,12 @@ const TutorialOverlay = ({ onComplete }) => {
     window.addEventListener('resize', updateRect);
     // Add small delay to ensure elements are rendered
     const timeout = setTimeout(updateRect, 300);
+    const timeout2 = setTimeout(updateRect, 1200); // Check again after Firebase load
+    
     return () => {
       window.removeEventListener('resize', updateRect);
       clearTimeout(timeout);
+      clearTimeout(timeout2);
     };
   }, [currentStep]);
 
@@ -63,10 +76,10 @@ const TutorialOverlay = ({ onComplete }) => {
 
   if (!rect) return null;
 
-  // Determine tooltip position
+  // Determine tooltip position safely
   const isMobile = window.innerWidth <= 768;
   const tooltipStyle = {
-    top: isMobile ? '20%' : rect.bottom + 20 + 'px',
+    top: isMobile ? '20%' : (rect.bottom + 20) + 'px',
     left: isMobile ? '50%' : Math.max(10, rect.left) + 'px',
     transform: isMobile ? 'translateX(-50%)' : 'none'
   };
@@ -79,6 +92,24 @@ const TutorialOverlay = ({ onComplete }) => {
 
   return (
     <div className="tutorial-overlay">
+      <svg width="100%" height="100%" style={{ position: 'absolute', top: 0, left: 0, zIndex: 9998, pointerEvents: 'none' }}>
+        <defs>
+          <mask id="cutout-mask">
+            <rect width="100%" height="100%" fill="white" />
+            <rect 
+              className="tutorial-svg-cutout"
+              x={rect.left - 10} 
+              y={rect.top - 10} 
+              width={rect.width + 20} 
+              height={rect.height + 20} 
+              rx="8" 
+              fill="black" 
+            />
+          </mask>
+        </defs>
+        <rect width="100%" height="100%" fill="rgba(11, 76, 140, 0.9)" mask="url(#cutout-mask)" />
+      </svg>
+
       <div 
         className="tutorial-cutout"
         style={{
