@@ -1,4 +1,4 @@
-import React from 'react';
+
 
 const ReviewDetailPanel = ({ review, currentUserId, isAdmin, onDelete, onEdit }) => {
   if (!review) {

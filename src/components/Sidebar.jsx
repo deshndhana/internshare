@@ -1,11 +1,18 @@
-import React from 'react';
+
 
 const Sidebar = ({ currentView, onViewChange }) => {
   return (
     <div className="sidebar">
       <div 
         className="sidebar-logo" 
-        onDoubleClick={() => onViewChange('admin')}
+        onDoubleClick={() => {
+          const pwd = window.prompt("Enter Admin Password:");
+          if (pwd === "Admin@2026") {
+            onViewChange('admin');
+          } else if (pwd !== null) {
+            alert("Incorrect Password!");
+          }
+        }}
         title="Double click for Admin"
       >
         IS

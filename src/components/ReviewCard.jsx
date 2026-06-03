@@ -1,4 +1,4 @@
-import React from 'react';
+
 
 const ReviewCard = ({ review, isActive, onClick }) => {
   return (

@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import Sidebar from './components/Sidebar';
 import ReviewCard from './components/ReviewCard';
 import AddReviewForm from './components/AddReviewForm';
@@ -33,7 +33,7 @@ function App() {
   const [selectedCompanyFilter, setSelectedCompanyFilter] = useState('all');
   const [searchQuery, setSearchQuery] = useState('');
   
-  const [loggedInEmail, setLoggedInEmail] = useState('');
+  const [loggedInEmail, setLoggedInEmail] = useState(() => localStorage.getItem('internshare_user_email') || '');
   const [isLoginModalOpen, setIsLoginModalOpen] = useState(false);
   const [loading, setLoading] = useState(true);
   
@@ -42,12 +42,7 @@ function App() {
 
   const reviewsCollectionRef = collection(db, 'reviews');
 
-  // Load Data from Firebase
   useEffect(() => {
-    const savedEmail = localStorage.getItem('internshare_user_email');
-    if (savedEmail) {
-      setLoggedInEmail(savedEmail);
-    }
 
     const fetchReviews = async () => {
       try {
@@ -65,7 +60,7 @@ function App() {
     };
 
     fetchReviews();
-  }, []);
+  }, []); // reviewsCollectionRef is defined outside but uses db which is constant
 
   const handleLogin = (email) => {
     const safeEmail = sanitizeInput(email);

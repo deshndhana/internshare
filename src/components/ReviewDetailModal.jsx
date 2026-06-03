@@ -1,4 +1,4 @@
-import React from 'react';
+
 import { departmentColors } from '../data';
 
 const ReviewDetailModal = ({ review, onClose, currentUserId, isAdmin, onDelete, onEdit }) => {

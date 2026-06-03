@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 
 const AdminPanel = ({ reviews, onDelete, onBack }) => {
   const [password, setPassword] = useState('');
