@@ -287,7 +287,7 @@ function App() {
             </div>
 
             <div className="hero-content">
-              <h2>{currentView === 'myposts' ? 'Your Shared Experiences' : 'Let’s find your dream internship'}</h2>
+              <h2>{currentView === 'myposts' ? 'Your Shared Experiences' : 'Let’s find your internship'}</h2>
               <p>{currentView === 'myposts' ? 'Manage your internship reviews and updates here.' : 'Discover the best experiences from students at top companies across all departments.'}</p>
             </div>
           </div>
@@ -334,34 +334,36 @@ function App() {
                     {currentView === 'myposts' ? "You haven't shared any experiences yet." : "Loading experiences from Firebase..."}
                   </div>
                 ) : filteredReviews.length > 0 ? (
-                  filteredReviews.map(review => (
-                    <ReviewCard 
-                      key={review.id} 
-                      review={review} 
-                      isActive={selectedReview?.id === review.id}
-                      onClick={setSelectedReview}
-                      onLike={handleLike}
-                      currentUserId={loggedInEmail}
-                    />
-                  ))
+                  <div className="cards-grid">
+                    {filteredReviews.map(review => (
+                      <ReviewCard 
+                        key={review.id} 
+                        review={review} 
+                        isActive={selectedReview?.id === review.id}
+                        onClick={setSelectedReview}
+                        onLike={handleLike}
+                        currentUserId={loggedInEmail}
+                      />
+                    ))}
+                  </div>
                 ) : (
                   <div style={{textAlign: 'center', padding: '2rem', color: 'var(--text-tertiary)'}}>
                     No experiences match your search.
                   </div>
                 )}
               </div>
-
-              <div className={`detail-pane-wrapper ${selectedReview ? 'mobile-active' : ''}`}>
-                <ReviewDetailPanel
-                  review={selectedReview}
-                  currentUserId={loggedInEmail}
-                  isAdmin={false}
-                  onClose={() => setSelectedReview(null)}
-                  onDelete={handleDelete}
-                  onEdit={handleEditRequest}
-                />
-              </div>
             </div>
+            
+            {selectedReview && (
+              <ReviewDetailPanel
+                review={selectedReview}
+                currentUserId={loggedInEmail}
+                isAdmin={false}
+                onClose={() => setSelectedReview(null)}
+                onDelete={handleDelete}
+                onEdit={handleEditRequest}
+              />
+            )}
           </>
         )}
 

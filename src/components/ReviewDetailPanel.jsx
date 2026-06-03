@@ -1,19 +1,16 @@
 
 
-const ReviewDetailPanel = ({ review, currentUserId, isAdmin, onDelete, onEdit }) => {
-  if (!review) {
-    return (
-      <div className="detail-pane empty-detail">
-        <p>Select a job or experience to see details here</p>
-      </div>
-    );
-  }
+const ReviewDetailPanel = ({ review, currentUserId, isAdmin, onDelete, onEdit, onClose }) => {
+  if (!review) return null;
 
   const isOwner = currentUserId === review.creatorId;
   const canModify = isOwner || isAdmin;
 
   return (
-    <div className="detail-pane fade-in">
+    <div className="modal-overlay fade-in" onClick={onClose} style={{ zIndex: 1000 }}>
+      <div className="modal-content" onClick={e => e.stopPropagation()} style={{ maxWidth: '800px', margin: 'auto' }}>
+        <button className="modal-close" onClick={onClose}>×</button>
+        <div className="detail-pane">
       <div className="detail-header">
         <h2>{String(review.companyName || 'Unknown')} - {String(review.department || 'Unknown')}</h2>
         <div className="detail-meta">
@@ -46,6 +43,8 @@ const ReviewDetailPanel = ({ review, currentUserId, isAdmin, onDelete, onEdit })
         )}
         <h3>About the experience</h3>
         <p>{review.experience}</p>
+      </div>
+        </div>
       </div>
     </div>
   );
