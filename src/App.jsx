@@ -313,8 +313,9 @@ function App() {
 
         {currentView !== 'admin' && (
           <footer className="app-footer">
-            <p>Project by Dhananjaya | Contact Developers: <a href="https://auraailabs.netlify.app/" target="_blank" rel="noopener noreferrer">Aura AI Labs</a></p>
-            <p>© {new Date().getFullYear()} InternSearch. All rights reserved.</p>
+            <p>Project by <a href="https://auraailabs.netlify.app/" target="_blank" rel="noopener noreferrer">Aura AI Labs</a></p>
+            <p>Contact Developer: <a href="https://www.linkedin.com/in/dhananhaya-n-deshapriya" target="_blank" rel="noopener noreferrer">Dhananjaya Deshapriya (LinkedIn)</a></p>
+            <p style={{ marginTop: '0.5rem' }}>© {new Date().getFullYear()} InternSearch. All rights reserved.</p>
           </footer>
         )}
       </div>
