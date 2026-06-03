@@ -88,7 +88,7 @@ const AddReviewForm = ({ onAddReview, initialData = null, onCancelEdit }) => {
               <input type="text" id="reviewerName" name="reviewerName" value={formData.reviewerName} onChange={handleChange} placeholder="John Doe" />
             </div>
             <div className="form-group">
-              <label htmlFor="contactNumber">Contact Number (Optional)</label>
+              <label htmlFor="contactNumber">Contact Number</label>
               <input type="tel" id="contactNumber" name="contactNumber" value={formData.contactNumber} onChange={handleChange} placeholder="07X XXX XXXX" />
             </div>
           </div>
@@ -97,11 +97,11 @@ const AddReviewForm = ({ onAddReview, initialData = null, onCancelEdit }) => {
         <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem' }}>
           <div className="form-group">
             <label htmlFor="companyName">Company Name</label>
-            <input type="text" id="companyName" name="companyName" value={formData.companyName} onChange={handleChange} placeholder="e.g. Tech Solutions" required />
+            <input type="text" id="companyName" name="companyName" value={formData.companyName} onChange={handleChange} placeholder="e.g. Tech Solutions" />
           </div>
           <div className="form-group">
             <label htmlFor="department">Department</label>
-            <select id="department" name="department" value={formData.department} onChange={handleChange} required>
+            <select id="department" name="department" value={formData.department} onChange={handleChange}>
               {departments.map((dept, index) => <option key={index} value={dept}>{dept}</option>)}
             </select>
           </div>
@@ -110,21 +110,21 @@ const AddReviewForm = ({ onAddReview, initialData = null, onCancelEdit }) => {
         <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem' }}>
           <div className="form-group">
             <label htmlFor="location">Location</label>
-            <input type="text" id="location" name="location" value={formData.location} onChange={handleChange} placeholder="e.g. Colombo (Remote)" required />
+            <input type="text" id="location" name="location" value={formData.location} onChange={handleChange} placeholder="e.g. Colombo (Remote)" />
           </div>
           <div className="form-group">
-            <label htmlFor="website">Company Website (Optional)</label>
+            <label htmlFor="website">Company Website</label>
             <input type="url" id="website" name="website" value={formData.website} onChange={handleChange} placeholder="https://example.com" />
           </div>
         </div>
 
         <div className="form-group">
           <label htmlFor="experience">Experience & Review</label>
-          <textarea id="experience" name="experience" value={formData.experience} onChange={handleChange} placeholder="What did you learn? How was the culture?" required style={{ minHeight: '120px' }}></textarea>
+          <textarea id="experience" name="experience" value={formData.experience} onChange={handleChange} placeholder="What did you learn? How was the culture?" style={{ minHeight: '120px' }}></textarea>
         </div>
 
         <div className="form-group">
-          <label>Add a Photo (Optional)</label>
+          <label>Add a Photo</label>
           <div style={{ 
             border: '2px dashed var(--border-color)', 
             borderRadius: '12px', 

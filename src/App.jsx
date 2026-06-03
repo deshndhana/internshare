@@ -5,6 +5,7 @@ import AddReviewForm from './components/AddReviewForm';
 import ReviewDetailPanel from './components/ReviewDetailPanel';
 import AdminPanel from './components/AdminPanel';
 import LoginModal from './components/LoginModal';
+import TutorialOverlay from './components/TutorialOverlay';
 import Dashboard from './components/Dashboard';
 import { departments } from './data';
 import { db } from './firebase';
@@ -39,6 +40,37 @@ function App() {
   const [showProfileMenu, setShowProfileMenu] = useState(false);
   const [isLoginModalOpen, setIsLoginModalOpen] = useState(false);
   const [loading, setLoading] = useState(true);
+  const [showTutorial, setShowTutorial] = useState(() => !localStorage.getItem('internshare_tutorial_seen'));
+
+  // Security Measures & Admin Secret Link
+  useEffect(() => {
+    // Check for secret admin link: ?admin=Str0ng@dmin!2026
+    const urlParams = new URLSearchParams(window.location.search);
+    if (urlParams.get('admin') === 'Str0ng@dmin!2026') {
+      setCurrentView('admin');
+      // Clean up URL to hide it
+      window.history.replaceState({}, document.title, "/");
+    }
+
+    // Disable Right Click
+    const handleContextMenu = (e) => e.preventDefault();
+    // Disable DevTools shortcuts (F12, Ctrl+Shift+I, Ctrl+Shift+J, Ctrl+U)
+    const handleKeyDown = (e) => {
+      if (e.key === 'F12' || 
+         (e.ctrlKey && e.shiftKey && (e.key === 'I' || e.key === 'J')) || 
+         (e.ctrlKey && e.key === 'U')) {
+        e.preventDefault();
+      }
+    };
+
+    document.addEventListener('contextmenu', handleContextMenu);
+    document.addEventListener('keydown', handleKeyDown);
+    
+    return () => {
+      document.removeEventListener('contextmenu', handleContextMenu);
+      document.removeEventListener('keydown', handleKeyDown);
+    };
+  }, []);
   
   const [selectedReview, setSelectedReview] = useState(null);
   const [reviewToEdit, setReviewToEdit] = useState(null);
@@ -227,7 +259,7 @@ function App() {
               <div className="top-nav-actions">
                 <button className="sidebar-icon" style={{color: 'white', border: '1px solid rgba(255,255,255,0.2)'}}>🔔</button>
                 {loggedInEmail ? (
-                  <div style={{ position: 'relative' }}>
+                  <div style={{ position: 'relative' }} id="tutorial-step-profile">
                     <div 
                       onClick={() => setShowProfileMenu(!showProfileMenu)}
                       style={{width: 36, height: 36, backgroundColor: '#cbd5e1', borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center', fontWeight: 'bold', color: '#1e293b', cursor: 'pointer'}} 
@@ -243,7 +275,7 @@ function App() {
                     )}
                   </div>
                 ) : (
-                  <button className="btn-secondary" style={{color: 'white', borderColor: 'white', padding: '0.5rem 1rem'}} onClick={() => setIsLoginModalOpen(true)}>
+                  <button id="tutorial-step-login" className="btn-secondary" style={{color: 'white', borderColor: 'white', padding: '0.5rem 1rem'}} onClick={() => setIsLoginModalOpen(true)}>
                     Sign In
                   </button>
                 )}
@@ -259,41 +291,30 @@ function App() {
 
         {(currentView === 'home' || currentView === 'myposts') && (
           <>
-            <div className="search-container fade-in">
+            <div className="search-container fade-in" id="tutorial-step-search">
               <div className="search-box">
                 <div className="search-input-group">
-                  <span style={{color: 'var(--text-tertiary)'}}>🔍</span>
-                  <input 
-                    type="text" 
-                    placeholder="Company or keyword" 
-                    value={searchQuery}
-                    onChange={(e) => setSearchQuery(e.target.value)}
-                  />
+                  <span style={{color: 'var(--text-tertiary)', fontSize: '1.2rem'}}>🔍</span>
+                  <input type="text" placeholder="Company or keyword" value={searchQuery} onChange={(e) => setSearchQuery(e.target.value)} />
                 </div>
                 <div className="search-divider"></div>
                 <div className="search-input-group">
-                  <span style={{color: 'var(--text-tertiary)'}}>📍</span>
-                  <select 
-                    value={selectedDepartment}
-                    onChange={(e) => setSelectedDepartment(e.target.value)}
-                  >
+                  <span style={{color: '#ef4444', fontSize: '1.2rem'}}>📍</span>
+                  <select value={selectedDepartment} onChange={(e) => setSelectedDepartment(e.target.value)}>
                     <option value="all">Any Department</option>
-                    {departments.map((dept, idx) => (
-                      <option key={idx} value={dept}>{dept}</option>
-                    ))}
+                    {departments.map((dept, index) => <option key={index} value={dept}>{dept}</option>)}
                   </select>
                 </div>
-                <button className="btn-primary">Search</button>
+                <button className="btn-primary" style={{width: 'auto', padding: '0.75rem 2.5rem'}}>Search</button>
               </div>
-
+              
               <div className="filter-pills">
                 <div className="filter-pill">
                   <select value={selectedCompanyFilter} onChange={(e) => setSelectedCompanyFilter(e.target.value)}>
                     <option value="all">All Companies</option>
-                    {uniqueCompanies.map(c => <option key={c} value={c}>{c}</option>)}
+                    {uniqueCompanies.map((comp, index) => <option key={index} value={comp}>{comp}</option>)}
                   </select>
                 </div>
-                <div className="filter-pill">Internship types ⌄</div>
               </div>
             </div>
 
@@ -379,6 +400,14 @@ function App() {
         onClose={() => setIsLoginModalOpen(false)}
         onLogin={handleLogin}
       />
+      {showTutorial && (
+        <TutorialOverlay 
+          onComplete={() => {
+            setShowTutorial(false);
+            localStorage.setItem('internshare_tutorial_seen', 'true');
+          }} 
+        />
+      )}
     </div>
   );
 }
