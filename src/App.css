@@ -115,8 +115,9 @@ button { cursor: pointer; font-family: inherit; border: none; background: none; 
 .detail-pane { 
   padding: 2.5rem; 
   width: 100%; 
+  box-sizing: border-box;
 }
-.detail-header h2 { word-break: break-word; }
+.detail-header h2 { word-wrap: break-word; overflow-wrap: break-word; font-size: 1.5rem; }
 .detail-header { border-bottom: 1px solid var(--border-color); padding-bottom: 1.5rem; margin-bottom: 1.5rem; }
 .detail-image { width: 100%; max-height: 400px; object-fit: cover; border-radius: var(--border-radius-md); margin-bottom: 1.5rem; }
 .empty-detail { display: none; }
@@ -126,9 +127,9 @@ button { cursor: pointer; font-family: inherit; border: none; background: none; 
 .form-group label { display: block; font-weight: 600; margin-bottom: 0.5rem; font-size: 0.9rem; }
 .form-group input, .form-group select, .form-group textarea { width: 100%; padding: 0.75rem; border: 1px solid var(--border-color); border-radius: var(--border-radius-md); font-family: inherit; }
 
-.modal-overlay { position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.6); display: flex; align-items: center; justify-content: center; z-index: 1000; padding: 1rem; }
-.modal-content { background: var(--surface-color); border-radius: var(--border-radius-lg); width: 100%; max-width: 800px; max-height: 90vh; overflow-y: auto; position: relative; box-shadow: var(--shadow-lg); }
-.modal-close { position: absolute; top: 1rem; right: 1rem; width: 32px; height: 32px; border-radius: 50%; display: flex; align-items: center; justify-content: center; border: 1px solid var(--border-color); background: white; font-size: 1.2rem; z-index: 10; }
+.modal-overlay { position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.6); display: flex; align-items: center; justify-content: center; z-index: 1000; overflow: hidden; padding: 1rem; box-sizing: border-box; }
+.modal-content { background: var(--surface-color); border-radius: var(--border-radius-lg); width: 100%; max-width: 800px; max-height: 90vh; overflow-y: auto; overflow-x: hidden; position: relative; box-shadow: var(--shadow-lg); box-sizing: border-box; }
+.modal-close { position: absolute; top: 1rem; right: 1rem; width: 32px; height: 32px; border-radius: 50%; display: flex; align-items: center; justify-content: center; border: 1px solid var(--border-color); background: white; font-size: 1.2rem; z-index: 10; cursor: pointer; }
 
 /* Footer */
 .app-footer { text-align: center; padding: 2rem; color: var(--text-tertiary); font-size: 0.85rem; margin-top: auto; border-top: 1px solid var(--border-color); }
@@ -167,7 +168,9 @@ button { cursor: pointer; font-family: inherit; border: none; background: none; 
   
   .cards-grid { grid-template-columns: 1fr; }
   
-  .detail-pane { padding: 1.5rem; }
+  .detail-pane { padding: 1.25rem; }
+  .detail-header h2 { font-size: 1.25rem; }
+  .modal-content { max-height: 85vh; width: 100%; }
 }
 
 /* Tutorial Overlay */
