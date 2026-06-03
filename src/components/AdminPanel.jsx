@@ -1,50 +1,53 @@
 import { db } from '../firebase';
 import { collection, addDoc, serverTimestamp } from 'firebase/firestore';
 
-const bptCompanies = [
-  "Godakanda Herbal Pvt Ltd",
-  "Sustainable Agriculture Research and Development Centre",
-  "Plant Genetic Resources Center",
-  "Department of Export Agriculture",
-  "Agricultural Biotechnology Center",
-  "National Water Supply & Drainage Board",
-  "Central Environmental Authority",
-  "Chello Dairy Products (Pvt) Ltd",
-  "CIC Seed Farm",
-  "ACE Health Care (Pvt) LTD",
-  "Department of Government Analyst",
-  "Ruwansiri Dairies (pvt) Ltd",
-  "Cellogen",
-  "Avon phamo chem Pvt (Ltd)",
-  "CIC Fertilizer",
-  "District General Hospital",
-  "Sands Active (pvt) Ltd",
-  "Cargills Quality Foods",
-  "National Institute of Fundamental Studies",
-  "Navesta Pharmaceuticals (Pvt) Ltd",
-  "Gene Tech",
-  "Milco Pvt LTD",
-  "CIC holdings",
-  "Hemas hospital",
-  "Fonterra Brands Lanka",
-  "Gene Lab",
-  "Wayamba Diagnostic Medical Laboratory",
-  "General hospital",
-  "Healthy Foods Lanka Exports (Pvt)",
-  "Teaching Hospital"
+const bptCompaniesData = [
+  { name: "Godakanda Herbal Pvt Ltd", location: "Wewaldeniya" },
+  { name: "Sustainable Agriculture Research and Development Centre", location: "Makandura" },
+  { name: "Plant Genetic Resources Center", location: "Gannoruwa" },
+  { name: "Department of Export Agriculture", location: "Central Research Station, Matale" },
+  { name: "Agricultural Biotechnology Center", location: "328, Upper Gampola Rd" },
+  { name: "National Water Supply & Drainage Board", location: "Anuradhapura" },
+  { name: "Central Environmental Authority", location: "Battaramulla" },
+  { name: "Water Board", location: "Bandarawela" },
+  { name: "Chello Dairy Products (Pvt) Ltd", location: "" },
+  { name: "CIC Seed Farm", location: "Pelwehera, Dambulla" },
+  { name: "ACE Health Care (Pvt) LTD", location: "" },
+  { name: "Department of Government Analyst", location: "Battaramulla" },
+  { name: "Ruwansiri Dairies (pvt) Ltd", location: "Bandarawela Road, Valpathwela, Welimada" },
+  { name: "Cellogen", location: "" },
+  { name: "Water Supply and Drainage Board", location: "Kegalle" },
+  { name: "Avon phamo chem Pvt (Ltd)", location: "Gannoruwa -pgrc" },
+  { name: "National Water Supply & Drainage Board (Western Production)", location: "Ambathale, Colombo" },
+  { name: "CIC Fertilizer", location: "Kurunegala" },
+  { name: "District General Hospital", location: "Kegalle" },
+  { name: "Sands Active (pvt) Ltd", location: "" },
+  { name: "Cargills Quality Foods", location: "Matale" },
+  { name: "National Institute of Fundamental Studies", location: "" },
+  { name: "Navesta Pharmaceuticals (Pvt) Ltd", location: "Horana" },
+  { name: "Gene Tech", location: "" },
+  { name: "Milco Pvt LTD", location: "" },
+  { name: "CIC holdings", location: "81, 14 Ganegoda Banda Raja Mw, Peliyagoda" },
+  { name: "Hemas hospital", location: "Waththala" },
+  { name: "Fonterra Brands Lanka", location: "No: 100 New Kandy Rd, Kaduwela 11650" },
+  { name: "Gene Lab", location: "Colombo" },
+  { name: "Wayamba Diagnostic Medical Laboratory", location: "Kurunegala" },
+  { name: "General hospital", location: "Ampara" },
+  { name: "Healthy Foods Lanka Exports (Pvt)", location: "Anuradhapura" },
+  { name: "Teaching Hospital", location: "Rathnapura" }
 ];
 
 const AdminPanel = ({ reviews, onDelete, onBack }) => {
   const handleImportBPT = async () => {
-    if (!window.confirm("Are you sure you want to import all BPT companies? This will add " + bptCompanies.length + " posts.")) return;
+    if (!window.confirm("Are you sure you want to import all BPT companies with their locations? This will add " + bptCompaniesData.length + " posts.")) return;
     
     try {
       const reviewsCollectionRef = collection(db, 'reviews');
-      for (const company of bptCompanies) {
+      for (const item of bptCompaniesData) {
         await addDoc(reviewsCollectionRef, {
-          companyName: company,
+          companyName: item.name,
           department: "Department of Bioprocess Technology",
-          location: "",
+          location: item.location,
           reviewerName: "",
           contactNumber: "",
           experience: "",
