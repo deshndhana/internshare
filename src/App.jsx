@@ -86,7 +86,6 @@ function App() {
         const data = await getDocs(q);
         const fetchedReviews = data.docs.map((doc) => ({ ...doc.data(), id: doc.id }));
         setReviews(fetchedReviews);
-        if (fetchedReviews.length > 0) setSelectedReview(fetchedReviews[0]);
       } catch (error) {
         console.error("Error fetching data:", error);
       } finally {
@@ -309,7 +308,7 @@ function App() {
                     {departments.map((dept, index) => <option key={index} value={dept}>{dept}</option>)}
                   </select>
                 </div>
-                <button className="btn-primary" style={{width: 'auto', padding: '0.75rem 2.5rem'}}>Search</button>
+                <button className="btn-primary">Search</button>
               </div>
               
               <div className="filter-pills">
