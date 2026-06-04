@@ -72,9 +72,9 @@ button { cursor: pointer; font-family: inherit; border: none; background: none; 
 
 .hero-header {
   background-color: var(--header-bg); color: var(--header-text);
-  padding: 2rem 3rem 4rem 3rem; border-bottom-left-radius: 2rem; border-bottom-right-radius: 2rem;
+  padding: 1.5rem 3rem 4rem 3rem; border-bottom-left-radius: 2rem; border-bottom-right-radius: 2rem;
 }
-.top-nav { display: flex; justify-content: space-between; align-items: center; margin-bottom: 3rem; flex-wrap: wrap; gap: 1rem; }
+.top-nav { display: flex; justify-content: space-between; align-items: center; margin-bottom: 0; flex-wrap: wrap; gap: 1rem; position: sticky; top: 0; z-index: 90; background-color: var(--header-bg); padding: 1rem 3rem; }
 .top-nav-brand { font-size: 1.25rem; font-weight: 700; display: flex; align-items: center; gap: 0.5rem; }
 .top-nav-links { display: flex; gap: 2rem; flex-wrap: wrap; }
 .top-nav-links a, .top-nav-links button { color: rgba(255,255,255,0.8); font-weight: 500; font-size: 0.95rem; }
@@ -138,7 +138,7 @@ button { cursor: pointer; font-family: inherit; border: none; background: none; 
 /* MOBILE RESPONSIVENESS */
 @media (max-width: 768px) {
   .app-container { flex-direction: column; }
-  .sidebar { width: 100%; height: 75px; flex-direction: row; justify-content: space-around; align-items: flex-start; padding-top: 0.5rem; bottom: 0; top: auto; z-index: 100; border-right: none; border-top: 1px solid var(--border-color); box-shadow: 0 -4px 10px rgba(0,0,0,0.05); }
+  .sidebar { position: fixed; bottom: 0; left: 0; right: 0; width: 100%; height: 75px; flex-direction: row; justify-content: space-around; align-items: flex-start; padding-top: 0.5rem; top: auto; z-index: 100; border-right: none; border-top: 1px solid var(--border-color); box-shadow: 0 -4px 10px rgba(0,0,0,0.05); }
   .sidebar-logo { display: none; }
   .sidebar-icon { margin-bottom: 0; flex-direction: column; height: auto; width: 60px; border-radius: 8px; padding: 0.3rem; }
   .icon-text { display: block; }
@@ -155,7 +155,9 @@ button { cursor: pointer; font-family: inherit; border: none; background: none; 
     padding: 1rem 1.5rem;
     box-shadow: var(--shadow-sm);
   }
-  .top-nav-links { display: none; } /* Hide on mobile for a cleaner look */
+  .top-nav-links { display: flex; align-items: center; justify-content: center; width: 100%; margin-top: 0.5rem; }
+  .top-nav-links a { display: none; }
+  .top-nav-links a.mobile-contact-link { display: inline-block; font-size: 0.8rem; text-decoration: underline; color: rgba(255,255,255,0.9); }
   
   .hero-content { padding: 1.5rem 1.5rem 3rem 1.5rem; }
   

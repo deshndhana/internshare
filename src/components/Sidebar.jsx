@@ -24,13 +24,7 @@ const Sidebar = ({ currentView, onViewChange }) => {
         <span className="icon-text">Analysis</span>
       </button>
       
-      <button 
-        className="sidebar-icon"
-        title="Search"
-      >
-        <span className="icon-emoji">🔍</span>
-        <span className="icon-text">Search</span>
-      </button>
+
 
       <button 
         className="sidebar-icon"

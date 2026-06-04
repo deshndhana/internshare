@@ -246,7 +246,7 @@ function App() {
 
       <div className="workspace">
         {(currentView === 'home' || currentView === 'dashboard' || currentView === 'myposts') && (
-          <div className="hero-header fade-in">
+          <>
             <div className="top-nav">
               <div className="top-nav-brand">
                 <div style={{width: 24, height: 24, backgroundColor: 'white', borderRadius: '50%'}}></div>
@@ -257,7 +257,7 @@ function App() {
                 <a href="#" className={currentView === 'dashboard' ? 'active' : ''} onClick={(e) => { e.preventDefault(); setCurrentView('dashboard'); }}>Dashboard</a>
                 <a href="#" onClick={handleShareExperienceClick}>Share Your Experience</a>
                 <a href="https://auraailabs.netlify.app/" target="_blank" rel="noopener noreferrer">Aura AI</a>
-                <a href="https://www.linkedin.com/in/dhananhaya-n-deshapriya" target="_blank" rel="noopener noreferrer">Contact Developers</a>
+                <a href="https://www.linkedin.com/in/dhananhaya-n-deshapriya" className="mobile-contact-link" target="_blank" rel="noopener noreferrer">Contact Developers</a>
               </div>
               <div className="top-nav-actions">
                 <button className="sidebar-icon" style={{color: 'white', border: '1px solid rgba(255,255,255,0.2)'}}>🔔</button>
@@ -284,12 +284,14 @@ function App() {
                 )}
               </div>
             </div>
+            <div className="hero-header fade-in" style={{ paddingTop: '1.5rem', borderTopLeftRadius: 0, borderTopRightRadius: 0 }}>
 
             <div className="hero-content">
               <h2>{currentView === 'myposts' ? 'Your Shared Experiences' : 'Let’s find your internship'}</h2>
               <p>{currentView === 'myposts' ? 'Manage your internship reviews and updates here.' : 'Discover the best experiences from students at top companies across all departments.'}</p>
             </div>
           </div>
+          </>
         )}
 
         {(currentView === 'home' || currentView === 'myposts') && (
