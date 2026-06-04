@@ -32,17 +32,15 @@ const Sidebar = ({ currentView, onViewChange }) => {
         <span className="icon-text">Search</span>
       </button>
 
-      {/* FAB for Mobile */}
-      <div className="fab-container" id="tutorial-step-add">
-        <button 
-          className="fab-button"
-          onClick={() => onViewChange('add')}
-          title="Add Experience"
-        >
-          ➕
-        </button>
-        <span className="fab-text">Add Experience</span>
-      </div>
+      <button 
+        className="sidebar-icon"
+        onClick={() => onViewChange('add')}
+        title="Add Experience"
+        id="tutorial-step-add"
+      >
+        <span className="icon-emoji">➕</span>
+        <span className="icon-text">Add</span>
+      </button>
 
     </div>
   );

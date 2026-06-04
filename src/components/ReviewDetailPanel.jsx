@@ -42,8 +42,12 @@ const ReviewDetailPanel = ({ review, currentUserId, isAdmin, onDelete, onEdit, o
         {review.image && (
           <img src={review.image} alt="Internship" className="detail-image" />
         )}
-        <h3>About the experience</h3>
-        <p>{review.experience}</p>
+        {review.experience && review.experience.trim() !== '' && (
+          <>
+            <h3 style={{ marginBottom: '0.5rem' }}>About the experience</h3>
+            <p>{review.experience}</p>
+          </>
+        )}
       </div>
         </div>
       </div>

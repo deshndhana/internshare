@@ -128,7 +128,7 @@ button { cursor: pointer; font-family: inherit; border: none; background: none; 
 .form-group input, .form-group select, .form-group textarea { width: 100%; padding: 0.75rem; border: 1px solid var(--border-color); border-radius: var(--border-radius-md); font-family: inherit; }
 
 .modal-overlay { position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.6); display: flex; align-items: center; justify-content: center; z-index: 1000; overflow: hidden; padding: 1rem; box-sizing: border-box; }
-.modal-content { background: var(--surface-color); border-radius: var(--border-radius-lg); width: 100%; max-width: 800px; max-height: 90vh; overflow-y: auto; overflow-x: hidden; position: relative; box-shadow: var(--shadow-lg); box-sizing: border-box; margin: auto; min-width: 0; }
+.modal-content { background: var(--surface-color); border-radius: var(--border-radius-lg); width: 100%; max-width: 650px; max-height: 90vh; overflow-y: auto; overflow-x: hidden; position: relative; box-shadow: var(--shadow-lg); box-sizing: border-box; margin: auto; min-width: 0; }
 .modal-close { position: absolute; top: 1rem; right: 1rem; width: 32px; height: 32px; border-radius: 50%; display: flex; align-items: center; justify-content: center; border: 1px solid var(--border-color); background: white; font-size: 1.2rem; z-index: 10; cursor: pointer; }
 
 /* Footer */
