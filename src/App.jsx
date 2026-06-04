@@ -5,7 +5,7 @@ import AddReviewForm from './components/AddReviewForm';
 import ReviewDetailPanel from './components/ReviewDetailPanel';
 import AdminPanel from './components/AdminPanel';
 import LoginModal from './components/LoginModal';
-import TutorialOverlay from './components/TutorialOverlay';
+
 import Dashboard from './components/Dashboard';
 import { departments } from './data';
 import { db } from './firebase';
@@ -406,14 +406,6 @@ function App() {
         onClose={() => setIsLoginModalOpen(false)}
         onLogin={handleLogin}
       />
-      {/* {showTutorial && (
-        <TutorialOverlay 
-          onComplete={() => {
-            setShowTutorial(false);
-            localStorage.setItem('internshare_tutorial_seen', 'true');
-          }} 
-        />
-      )} */}
     </div>
   );
 }

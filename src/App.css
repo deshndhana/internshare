@@ -168,9 +168,10 @@ button { cursor: pointer; font-family: inherit; border: none; background: none; 
   
   .cards-grid { grid-template-columns: 1fr; }
   
-  .detail-pane { padding: 1.25rem; }
-  .detail-header h2 { font-size: 1.25rem; }
-  .modal-content { max-height: 85vh; width: 100%; }
+  .detail-pane { padding: 1rem; }
+  .detail-header h2 { font-size: 1.15rem; }
+  .modal-content { max-height: 80vh; width: 92vw; max-width: 92vw; margin: 0 auto; overflow-x: hidden; }
+  .modal-overlay { padding: 0; }
 }
 
 /* Tutorial Overlay */
