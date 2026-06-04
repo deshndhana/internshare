@@ -7,8 +7,8 @@ const ReviewDetailPanel = ({ review, currentUserId, isAdmin, onDelete, onEdit, o
   const canModify = isOwner || isAdmin;
 
   return (
-    <div className="modal-overlay fade-in" onClick={onClose} style={{ zIndex: 1000, padding: '1rem' }}>
-      <div className="modal-content" onClick={e => e.stopPropagation()} style={{ maxWidth: '800px', margin: 'auto' }}>
+    <div className="modal-overlay fade-in" onClick={onClose}>
+      <div className="modal-content" onClick={e => e.stopPropagation()}>
         <button className="modal-close" onClick={onClose}>×</button>
         <div className="detail-pane">
       <div className="detail-header">

@@ -21,7 +21,7 @@ const LoginModal = ({ isOpen, onClose, onLogin }) => {
 
   return (
     <div className="modal-overlay">
-      <div className="modal-content" style={{ maxWidth: '420px', padding: '2.5rem', borderRadius: '16px', textAlign: 'center' }}>
+      <div className="modal-content" style={{ width: '92vw', maxWidth: '420px', padding: '2.5rem', borderRadius: '16px', textAlign: 'center', boxSizing: 'border-box' }}>
         <button className="modal-close" onClick={onClose}>&times;</button>
         
         <div style={{ marginBottom: '2rem' }}>
